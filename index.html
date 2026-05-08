@@ -211,7 +211,6 @@
   </main>
 
   <script>
-    const API_KEY = "F5UUERHWGQU0F6TG";
     const SYMBOLS = [
       { symbol: "VUAA.LON", key: "vuaa" },
       { symbol: "QBTS", key: "qbts" }
@@ -239,6 +238,7 @@
       const volumeEl = document.getElementById("volume-" + key);
 
       const price = quote["05. price"];
+      const changeRaw = quote["09. change"];
       const changePctRaw = quote["10. change percent"] || "";
       const volume = quote["06. volume"];
 
@@ -250,7 +250,11 @@
       if (Number.isFinite(numericChange) && numericChange > 0) cls = "positive";
       if (Number.isFinite(numericChange) && numericChange < 0) cls = "negative";
       changeEl.className = "variation " + cls;
-      changeEl.textContent = "Variation: " + (changePctRaw || "--");
+      const formattedChange = Number.isFinite(Number(changeRaw))
+        ? formatNumber(changeRaw, 2) + " $"
+        : "--";
+      const percentPart = changePctRaw || "--";
+      changeEl.textContent = "Variation: " + formattedChange + " (" + percentPart + ")";
 
       card.classList.remove("loading");
     }
@@ -341,9 +345,7 @@
     }
 
     async function fetchQuote(symbol) {
-      const url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" +
-        encodeURIComponent(symbol) +
-        "&apikey=" + encodeURIComponent(API_KEY);
+      const url = "/api/quote?symbol=" + encodeURIComponent(symbol);
       const response = await fetch(url);
       if (!response.ok) throw new Error("HTTP " + response.status);
       const data = await response.json();
@@ -351,9 +353,8 @@
     }
 
     async function fetchDailySeries(symbol) {
-      const url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" +
-        encodeURIComponent(symbol) +
-        "&outputsize=full&apikey=" + encodeURIComponent(API_KEY);
+      const url = "/api/quote?symbol=" + encodeURIComponent(symbol) +
+        "&avFunction=TIME_SERIES_DAILY";
       const response = await fetch(url);
       if (!response.ok) throw new Error("HTTP " + response.status);
       const data = await response.json();
@@ -364,21 +365,28 @@
       const todayPerf = {};
       const tasks = SYMBOLS.map(async (item) => {
         try {
-          const [quote, dailySeries] = await Promise.all([
-            fetchQuote(item.symbol),
-            fetchDailySeries(item.symbol)
-          ]);
+          const quote = await fetchQuote(item.symbol);
           if (!quote || Object.keys(quote).length === 0) {
             throw new Error("Empty quote");
           }
-          if (!dailySeries || Object.keys(dailySeries).length === 0) {
-            throw new Error("Empty daily series");
-          }
           updateCard(item.key, quote);
-          const dailyMetrics = calculateFromDailySeries(dailySeries);
-          updateDailyMetrics(item.key, dailyMetrics);
           const changePctRaw = quote["10. change percent"] || "";
           todayPerf[item.key] = Number(changePctRaw.replace("%", ""));
+
+          try {
+            const dailySeries = await fetchDailySeries(item.symbol);
+            if (!dailySeries || Object.keys(dailySeries).length === 0) {
+              throw new Error("Empty daily series");
+            }
+            const dailyMetrics = calculateFromDailySeries(dailySeries);
+            updateDailyMetrics(item.key, dailyMetrics);
+          } catch (dailyError) {
+            document.getElementById("change5d-" + item.key).innerHTML =
+              "<strong>Variation 5 jours:</strong> indisponible";
+            document.getElementById("range52w-" + item.key).innerHTML =
+              "<strong>52 semaines:</strong> indisponible";
+            console.error("Erreur TIME_SERIES_DAILY pour", item.symbol, dailyError);
+          }
         } catch (error) {
           markError(item.key);
           console.error("Erreur pour", item.symbol, error);
