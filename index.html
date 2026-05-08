@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>dashboard test Anis</title>
+  <title>Dashboard test Anis</title>
   <style>
     :root {
-      --bg: #120b1f;
-      --bg-soft: #1a1230;
-      --card: rgba(35, 20, 64, 0.75);
-      --card-border: rgba(178, 121, 255, 0.28);
-      --text: #efe9ff;
-      --text-muted: #b9a9d8;
-      --accent: #a855f7;
-      --accent-2: #7c3aed;
-      --shadow: 0 12px 40px rgba(83, 31, 145, 0.35);
+      --bg-1: #0b0b14;
+      --bg-2: #15132a;
+      --panel: rgba(20, 18, 36, 0.86);
+      --panel-border: rgba(155, 121, 255, 0.3);
+      --text: #f6f4ff;
+      --muted: #b4aecf;
+      --green: #21c77a;
+      --red: #ff5f6d;
+      --accent: #7d59ff;
+      --shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
     }
 
     * {
@@ -25,238 +26,374 @@
 
     body {
       min-height: 100vh;
-      font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
       background:
-        radial-gradient(circle at 12% 18%, rgba(168, 85, 247, 0.22), transparent 30%),
-        radial-gradient(circle at 90% 82%, rgba(124, 58, 237, 0.2), transparent 28%),
-        linear-gradient(165deg, var(--bg) 0%, #18102d 45%, #120b22 100%);
+        radial-gradient(circle at 10% 20%, rgba(126, 84, 255, 0.2), transparent 32%),
+        radial-gradient(circle at 88% 80%, rgba(86, 57, 191, 0.22), transparent 30%),
+        linear-gradient(145deg, var(--bg-1), var(--bg-2));
       color: var(--text);
+      padding: 1rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
     }
 
-    .dashboard {
-      width: 100%;
-      max-width: 1100px;
-      background: linear-gradient(150deg, rgba(18, 11, 34, 0.95), rgba(9, 6, 17, 0.9));
-      border: 1px solid rgba(168, 85, 247, 0.22);
+    .app {
+      width: min(1100px, 100%);
+      background: linear-gradient(160deg, rgba(26, 23, 49, 0.94), rgba(16, 14, 33, 0.95));
+      border: 1px solid var(--panel-border);
       border-radius: 24px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px);
       padding: clamp(1rem, 3vw, 2rem);
     }
 
-    .header {
-      margin-bottom: 1.3rem;
+    .top {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 1rem;
     }
 
     .title {
-      font-size: clamp(1.35rem, 4.5vw, 2.2rem);
+      font-size: clamp(1.3rem, 4vw, 2rem);
       font-weight: 700;
-      letter-spacing: 0.3px;
-      margin-bottom: 0.35rem;
     }
 
-    .subtitle {
-      color: var(--text-muted);
-      font-size: clamp(0.9rem, 2.8vw, 1rem);
+    .sub {
+      color: var(--muted);
+      font-size: clamp(0.82rem, 2.4vw, 0.95rem);
     }
 
     .grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 0.9rem;
+      gap: 1rem;
     }
 
     .card {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.85rem;
-      text-decoration: none;
-      color: var(--text);
-      background: linear-gradient(140deg, var(--card), rgba(26, 14, 50, 0.76));
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
+      background: var(--panel);
+      border: 1px solid rgba(147, 112, 255, 0.26);
+      border-radius: 18px;
       padding: 1rem;
-      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
-      min-height: 84px;
     }
 
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      pointer-events: none;
-      background: linear-gradient(120deg, rgba(168, 85, 247, 0.14), transparent 40%, rgba(124, 58, 237, 0.13));
-      opacity: 0;
-      transition: opacity 0.18s ease;
+    .symbol {
+      font-size: 0.92rem;
+      color: #cbc3ed;
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.4px;
     }
 
-    .card:hover,
-    .card:focus-visible {
-      transform: translateY(-2px);
-      border-color: rgba(201, 160, 255, 0.55);
-      box-shadow: 0 8px 22px rgba(124, 58, 237, 0.35);
-      outline: none;
-    }
-
-    .card:hover::before,
-    .card:focus-visible::before {
-      opacity: 1;
-    }
-
-    .card-left {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      min-width: 0;
-    }
-
-    .icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      background: linear-gradient(145deg, var(--accent), var(--accent-2));
-      color: #fff;
-      flex-shrink: 0;
-      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.35);
-    }
-
-    .label-wrap {
-      min-width: 0;
-    }
-
-    .label {
+    .name {
       font-size: 1rem;
-      font-weight: 650;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      color: var(--text);
+      margin-bottom: 1rem;
     }
 
-    .url {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      margin-top: 0.15rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 26ch;
+    .price {
+      font-size: clamp(2rem, 8vw, 3rem);
+      font-weight: 750;
+      line-height: 1;
+      margin-bottom: 0.7rem;
     }
 
-    .arrow {
-      color: #dbc6ff;
-      font-size: 1.15rem;
-      flex-shrink: 0;
-      transform: translateX(0);
-      transition: transform 0.18s ease;
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
     }
 
-    .card:hover .arrow,
-    .card:focus-visible .arrow {
-      transform: translateX(3px);
+    .extra {
+      display: grid;
+      gap: 0.35rem;
+      color: var(--muted);
+      font-size: 0.9rem;
     }
 
-    @media (min-width: 620px) {
+    .extra strong {
+      color: #ddd7f4;
+      font-weight: 600;
+    }
+
+    .summary {
+      margin-top: 1rem;
+      background: var(--panel);
+      border: 1px solid rgba(147, 112, 255, 0.26);
+      border-radius: 18px;
+      padding: 1rem;
+    }
+
+    .summary-title {
+      font-size: 0.95rem;
+      color: #cbc3ed;
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.3px;
+    }
+
+    .summary-text {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .variation {
+      font-weight: 700;
+    }
+
+    .positive {
+      color: var(--green);
+    }
+
+    .negative {
+      color: var(--red);
+    }
+
+    .neutral {
+      color: #d4cdf1;
+    }
+
+    .loading {
+      opacity: 0.8;
+    }
+
+    @media (min-width: 760px) {
       .grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (min-width: 980px) {
-      .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .dashboard {
-        padding: 2rem;
       }
     }
   </style>
 </head>
 <body>
-  <main class="dashboard" aria-label="Dashboard de liens personnels">
-    <header class="header">
-      <h1 class="title">dashboard test Anis</h1>
-      <p class="subtitle">Acces rapide a tes liens essentiels</p>
+  <main class="app">
+    <header class="top">
+      <h1 class="title">Dashboard test Anis</h1>
+      <p class="sub">Suivi live des positions (refresh automatique toutes les 60 secondes)</p>
+      <p class="sub" id="lastUpdate">Derniere mise a jour : en attente...</p>
     </header>
 
     <section class="grid">
-      <a class="card" href="https://www.google.com" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir Google">
-        <div class="card-left">
-          <span class="icon">G</span>
-          <div class="label-wrap">
-            <div class="label">Google</div>
-            <div class="url">google.com</div>
-          </div>
+      <article class="card loading" id="card-vuaa">
+        <p class="symbol">VUAA.LON</p>
+        <h2 class="name">ETF Vanguard S&P500</h2>
+        <p class="price" id="price-vuaa">--</p>
+        <div class="meta">
+          <span class="variation neutral" id="change-vuaa">Variation: --</span>
+          <span id="volume-vuaa">Volume: --</span>
         </div>
-        <span class="arrow">-></span>
-      </a>
+        <div class="extra">
+          <span id="change5d-vuaa"><strong>Variation 5 jours:</strong> --</span>
+          <span id="range52w-vuaa"><strong>52 semaines:</strong> --</span>
+        </div>
+      </article>
 
-      <a class="card" href="https://mail.google.com" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir Gmail">
-        <div class="card-left">
-          <span class="icon">M</span>
-          <div class="label-wrap">
-            <div class="label">Gmail</div>
-            <div class="url">mail.google.com</div>
-          </div>
+      <article class="card loading" id="card-qbts">
+        <p class="symbol">QBTS</p>
+        <h2 class="name">D-Wave Quantum</h2>
+        <p class="price" id="price-qbts">--</p>
+        <div class="meta">
+          <span class="variation neutral" id="change-qbts">Variation: --</span>
+          <span id="volume-qbts">Volume: --</span>
         </div>
-        <span class="arrow">-></span>
-      </a>
+        <div class="extra">
+          <span id="change5d-qbts"><strong>Variation 5 jours:</strong> --</span>
+          <span id="range52w-qbts"><strong>52 semaines:</strong> --</span>
+        </div>
+      </article>
+    </section>
 
-      <a class="card" href="https://chatgpt.com" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir ChatGPT">
-        <div class="card-left">
-          <span class="icon">C</span>
-          <div class="label-wrap">
-            <div class="label">ChatGPT</div>
-            <div class="url">chatgpt.com</div>
-          </div>
-        </div>
-        <span class="arrow">-></span>
-      </a>
-
-      <a class="card" href="https://claude.ai" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir Claude">
-        <div class="card-left">
-          <span class="icon">A</span>
-          <div class="label-wrap">
-            <div class="label">Claude</div>
-            <div class="url">claude.ai</div>
-          </div>
-        </div>
-        <span class="arrow">-></span>
-      </a>
-
-      <a class="card" href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir LinkedIn">
-        <div class="card-left">
-          <span class="icon">in</span>
-          <div class="label-wrap">
-            <div class="label">LinkedIn</div>
-            <div class="url">linkedin.com</div>
-          </div>
-        </div>
-        <span class="arrow">-></span>
-      </a>
-
-      <a class="card" href="https://www.notion.so" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir Notion">
-        <div class="card-left">
-          <span class="icon">N</span>
-          <div class="label-wrap">
-            <div class="label">Notion</div>
-            <div class="url">notion.so</div>
-          </div>
-        </div>
-        <span class="arrow">-></span>
-      </a>
+    <section class="summary">
+      <p class="summary-title">Resume du jour</p>
+      <p class="summary-text" id="bestToday">Position la plus performante aujourd'hui: en attente...</p>
     </section>
   </main>
+
+  <script>
+    const API_KEY = "F5UUERHWGQU0F6TG";
+    const SYMBOLS = [
+      { symbol: "VUAA.LON", key: "vuaa" },
+      { symbol: "QBTS", key: "qbts" }
+    ];
+
+    function formatNumber(value, digits = 2) {
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "--";
+      return num.toLocaleString("fr-FR", {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      });
+    }
+
+    function formatInteger(value) {
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "--";
+      return num.toLocaleString("fr-FR");
+    }
+
+    function updateCard(key, quote) {
+      const card = document.getElementById("card-" + key);
+      const priceEl = document.getElementById("price-" + key);
+      const changeEl = document.getElementById("change-" + key);
+      const volumeEl = document.getElementById("volume-" + key);
+
+      const price = quote["05. price"];
+      const changePctRaw = quote["10. change percent"] || "";
+      const volume = quote["06. volume"];
+
+      priceEl.textContent = price ? formatNumber(price, 2) + " $" : "--";
+      volumeEl.textContent = "Volume: " + formatInteger(volume);
+
+      const numericChange = Number(changePctRaw.replace("%", ""));
+      let cls = "neutral";
+      if (Number.isFinite(numericChange) && numericChange > 0) cls = "positive";
+      if (Number.isFinite(numericChange) && numericChange < 0) cls = "negative";
+      changeEl.className = "variation " + cls;
+      changeEl.textContent = "Variation: " + (changePctRaw || "--");
+
+      card.classList.remove("loading");
+    }
+
+    function calculateFromDailySeries(series) {
+      const dates = Object.keys(series).sort((a, b) => new Date(b) - new Date(a));
+      if (dates.length < 6) {
+        return { fiveDayPercent: null, high52w: null, low52w: null };
+      }
+
+      const latestClose = Number(series[dates[0]]["4. close"]);
+      const close5dAgo = Number(series[dates[5]]["4. close"]);
+      const fiveDayPercent = Number.isFinite(latestClose) && Number.isFinite(close5dAgo) && close5dAgo !== 0
+        ? ((latestClose - close5dAgo) / close5dAgo) * 100
+        : null;
+
+      const days52w = dates.slice(0, 260);
+      let high52w = -Infinity;
+      let low52w = Infinity;
+      for (const date of days52w) {
+        const day = series[date];
+        const high = Number(day["2. high"]);
+        const low = Number(day["3. low"]);
+        if (Number.isFinite(high)) high52w = Math.max(high52w, high);
+        if (Number.isFinite(low)) low52w = Math.min(low52w, low);
+      }
+
+      return {
+        fiveDayPercent,
+        high52w: Number.isFinite(high52w) ? high52w : null,
+        low52w: Number.isFinite(low52w) ? low52w : null
+      };
+    }
+
+    function updateDailyMetrics(key, metrics) {
+      const change5dEl = document.getElementById("change5d-" + key);
+      const range52wEl = document.getElementById("range52w-" + key);
+
+      if (Number.isFinite(metrics.fiveDayPercent)) {
+        const sign = metrics.fiveDayPercent > 0 ? "+" : "";
+        change5dEl.innerHTML = "<strong>Variation 5 jours:</strong> " +
+          sign + formatNumber(metrics.fiveDayPercent, 2) + "%";
+      } else {
+        change5dEl.innerHTML = "<strong>Variation 5 jours:</strong> indisponible";
+      }
+
+      if (Number.isFinite(metrics.low52w) && Number.isFinite(metrics.high52w)) {
+        range52wEl.innerHTML = "<strong>52 semaines:</strong> " +
+          formatNumber(metrics.low52w, 2) + " $ - " + formatNumber(metrics.high52w, 2) + " $";
+      } else {
+        range52wEl.innerHTML = "<strong>52 semaines:</strong> indisponible";
+      }
+    }
+
+    function updateBestPerformer(todayPerf) {
+      const summaryEl = document.getElementById("bestToday");
+      const entries = Object.entries(todayPerf).filter(([, value]) => Number.isFinite(value));
+      if (entries.length === 0) {
+        summaryEl.textContent = "Position la plus performante aujourd'hui: donnees indisponibles";
+        return;
+      }
+
+      entries.sort((a, b) => b[1] - a[1]);
+      const winnerKey = entries[0][0];
+      const winnerValue = entries[0][1];
+      const winnerLabel = winnerKey === "vuaa" ? "VUAA.LON (ETF Vanguard S&P500)" : "QBTS (D-Wave Quantum)";
+      const sign = winnerValue > 0 ? "+" : "";
+      summaryEl.textContent =
+        "Position la plus performante aujourd'hui: " + winnerLabel + " (" +
+        sign + formatNumber(winnerValue, 2) + "%)";
+    }
+
+    function markError(key) {
+      const card = document.getElementById("card-" + key);
+      const priceEl = document.getElementById("price-" + key);
+      const changeEl = document.getElementById("change-" + key);
+      const volumeEl = document.getElementById("volume-" + key);
+      const change5dEl = document.getElementById("change5d-" + key);
+      const range52wEl = document.getElementById("range52w-" + key);
+
+      priceEl.textContent = "N/A";
+      changeEl.textContent = "Variation: indisponible";
+      changeEl.className = "variation neutral";
+      volumeEl.textContent = "Volume: indisponible";
+      change5dEl.innerHTML = "<strong>Variation 5 jours:</strong> indisponible";
+      range52wEl.innerHTML = "<strong>52 semaines:</strong> indisponible";
+      card.classList.remove("loading");
+    }
+
+    async function fetchQuote(symbol) {
+      const url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" +
+        encodeURIComponent(symbol) +
+        "&apikey=" + encodeURIComponent(API_KEY);
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      const data = await response.json();
+      return data["Global Quote"];
+    }
+
+    async function fetchDailySeries(symbol) {
+      const url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" +
+        encodeURIComponent(symbol) +
+        "&outputsize=full&apikey=" + encodeURIComponent(API_KEY);
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      const data = await response.json();
+      return data["Time Series (Daily)"];
+    }
+
+    async function refreshData() {
+      const todayPerf = {};
+      const tasks = SYMBOLS.map(async (item) => {
+        try {
+          const [quote, dailySeries] = await Promise.all([
+            fetchQuote(item.symbol),
+            fetchDailySeries(item.symbol)
+          ]);
+          if (!quote || Object.keys(quote).length === 0) {
+            throw new Error("Empty quote");
+          }
+          if (!dailySeries || Object.keys(dailySeries).length === 0) {
+            throw new Error("Empty daily series");
+          }
+          updateCard(item.key, quote);
+          const dailyMetrics = calculateFromDailySeries(dailySeries);
+          updateDailyMetrics(item.key, dailyMetrics);
+          const changePctRaw = quote["10. change percent"] || "";
+          todayPerf[item.key] = Number(changePctRaw.replace("%", ""));
+        } catch (error) {
+          markError(item.key);
+          console.error("Erreur pour", item.symbol, error);
+        }
+      });
+
+      await Promise.all(tasks);
+      updateBestPerformer(todayPerf);
+      const now = new Date();
+      document.getElementById("lastUpdate").textContent =
+        "Derniere mise a jour : " + now.toLocaleString("fr-FR");
+    }
+
+    refreshData();
+    setInterval(refreshData, 60 * 1000);
+  </script>
 </body>
 </html>
