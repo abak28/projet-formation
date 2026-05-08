@@ -327,6 +327,10 @@
         sign + formatNumber(winnerValue, 2) + "%)";
     }
 
+    function sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
     function markError(key) {
       const card = document.getElementById("card-" + key);
       const priceEl = document.getElementById("price-" + key);
@@ -363,7 +367,8 @@
 
     async function refreshData() {
       const todayPerf = {};
-      const tasks = SYMBOLS.map(async (item) => {
+      for (let index = 0; index < SYMBOLS.length; index += 1) {
+        const item = SYMBOLS[index];
         try {
           const quote = await fetchQuote(item.symbol);
           if (!quote || Object.keys(quote).length === 0) {
@@ -391,9 +396,11 @@
           markError(item.key);
           console.error("Erreur pour", item.symbol, error);
         }
-      });
+        if (index < SYMBOLS.length - 1) {
+          await sleep(1000);
+        }
+      }
 
-      await Promise.all(tasks);
       updateBestPerformer(todayPerf);
       const now = new Date();
       document.getElementById("lastUpdate").textContent =
